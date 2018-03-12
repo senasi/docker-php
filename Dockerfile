@@ -45,7 +45,7 @@ RUN apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
     docker-php-ext-configure imap --with-imap-ssl=/usr && \
     pecl install mongodb mailparse libsodium && \
     docker-php-ext-enable mongodb mailparse sodium && \
-    docker-php-ext-install calendar gd pcntl pdo_mysql soap sockets xsl zip opcache mcrypt bcmath intl imap && \
+    docker-php-ext-install calendar gd pcntl pdo_mysql soap sockets xsl zip opcache mcrypt bcmath intl imap mysqli && \
     apk del .build-deps
 
 RUN set -ex \
