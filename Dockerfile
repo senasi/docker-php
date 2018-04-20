@@ -54,8 +54,13 @@ RUN set -ex \
 		echo '[www]'; \
 		echo 'pm.max_children = 10'; \
 		echo 'pm.max_requests = 500'; \
-	} | tee php-fpm.d/zzz-docker.conf
-
-COPY php.ini /usr/local/etc/php/
+	} | tee php-fpm.d/zzz-docker.conf \
+	&& { \
+		echo '[php]'; \
+		echo 'memory_limit = 512M'; \
+		echo 'post_max_size = 256M'; \
+		echo 'upload_max_size = 128M'; \
+	} | tee php/php.ini
 
 ENV LD_PRELOAD /usr/local/lib/preloadable_libiconv.so
+
