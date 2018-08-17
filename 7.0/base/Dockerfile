@@ -1,10 +1,12 @@
 FROM php:7.0-fpm-alpine
 
-WORKDIR /build
-
 RUN mkdir /build/libiconv
 
 COPY libiconv.patch /build/libiconv/
+
+# iconv problem
+# https://github.com/docker-library/php/issues/240
+# in the future try: RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing gnu-libiconv
 
 RUN apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
     cd /build/libiconv && \
@@ -48,19 +50,8 @@ RUN apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
     docker-php-ext-install calendar gd pcntl pdo_mysql soap sockets xsl zip opcache mcrypt bcmath intl imap mysqli && \
     apk del .build-deps
 
-RUN set -ex \
-	&& cd /usr/local/etc \
-	&& { \
-		echo '[www]'; \
-		echo 'pm.max_children = 10'; \
-		echo 'pm.max_requests = 500'; \
-	} | tee php-fpm.d/zzz-docker.conf \
-	&& { \
-		echo '[php]'; \
-		echo 'memory_limit = 512M'; \
-		echo 'post_max_size = 256M'; \
-		echo 'upload_max_size = 128M'; \
-	} | tee php/php.ini
-
 ENV LD_PRELOAD /usr/local/lib/preloadable_libiconv.so
 
+COPY docker-php-entrypoint-wrapper /usr/local/bin/
+
+ENTRYPOINT ["docker-php-entrypoint-wrapper"]
