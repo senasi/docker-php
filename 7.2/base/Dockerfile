@@ -1,4 +1,4 @@
-FROM php:7.0-fpm-alpine
+FROM php:7.2-fpm-alpine
 
 RUN mkdir -p /build/libiconv
 
@@ -53,5 +53,7 @@ RUN apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 ENV LD_PRELOAD /usr/local/lib/preloadable_libiconv.so
 
 COPY docker-php-entrypoint-wrapper /usr/local/bin/
+
+WORKDIR /data
 
 ENTRYPOINT ["docker-php-entrypoint-wrapper"]

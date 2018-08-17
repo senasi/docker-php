@@ -54,4 +54,6 @@ ENV LD_PRELOAD /usr/local/lib/preloadable_libiconv.so
 
 COPY docker-php-entrypoint-wrapper /usr/local/bin/
 
+WORKDIR /data
+
 ENTRYPOINT ["docker-php-entrypoint-wrapper"]
