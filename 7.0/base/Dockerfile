@@ -1,6 +1,6 @@
 FROM php:7.0-fpm-alpine
 
-RUN mkdir /build/libiconv
+RUN mkdir -p /build/libiconv
 
 COPY libiconv.patch /build/libiconv/
 
