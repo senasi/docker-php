@@ -15,9 +15,9 @@ cd /usr/local/etc
 
 { \
 	echo '[php]'; \
-	echo "memory_limit = ${PHP_MEMORY_LIMIT:-512MB}"; \
-	echo "post_max_size = ${PHP_POST_MAX_SIZE:-256MB}"; \
-	echo "upload_max_size = ${PHP_UPLOAD_MAX_SIZE:-128MB}"; \
+	echo "memory_limit = ${PHP_MEMORY_LIMIT:-512M}"; \
+	echo "post_max_size = ${PHP_POST_MAX_SIZE:-256M}"; \
+	echo "upload_max_size = ${PHP_UPLOAD_MAX_SIZE:-128M}"; \
 } | tee php/php.ini
 
 # now run original entrypoint
