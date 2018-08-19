@@ -17,3 +17,4 @@ RUN	apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 RUN wget https://getcomposer.org/installer -O - -q | php -- --install-dir=/usr/bin --filename=composer && \
 	apk add --no-cache git openssh perl
 
+WORKDIR /data
