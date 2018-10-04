@@ -1,4 +1,4 @@
-FROM php:7.0-fpm-alpine
+FROM php:7.0.32-fpm-alpine
 
 RUN mkdir -p /build/libiconv
 
