@@ -1,4 +1,4 @@
-FROM senasi/php:7.0
+FROM senasi/php:7.2
 
 RUN	apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 	pecl install xdebug && \
