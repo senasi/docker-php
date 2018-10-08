@@ -19,6 +19,7 @@ RUN wget https://getcomposer.org/installer -O - -q | php -- --install-dir=/usr/b
 
 RUN apk add --no-cache nodejs npm && \
 	npm install npm@latest -g && \
-	npm install bower -g
+	npm install bower -g && \
+	echo '{ "allow_root": true }' > /root/.bowerrc
 
 WORKDIR /data
