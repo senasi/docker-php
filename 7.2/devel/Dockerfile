@@ -17,4 +17,8 @@ RUN	apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 RUN wget https://getcomposer.org/installer -O - -q | php -- --install-dir=/usr/bin --filename=composer && \
 	apk add --no-cache git openssh perl
 
+RUN apk add --no-cache nodejs npm && \
+	npm install npm@latest -g && \
+	npm install bower -g
+
 WORKDIR /data
