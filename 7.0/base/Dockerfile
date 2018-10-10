@@ -39,7 +39,8 @@ RUN apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 	pecl install mongodb mailparse libsodium && \
 	docker-php-ext-enable mongodb mailparse sodium && \
 	docker-php-ext-install calendar gd pcntl pdo_mysql soap sockets xsl zip opcache mcrypt bcmath intl imap mysqli && \
-	apk del .build-deps
+	apk del .build-deps && \
+	rm -rf /tmp/*
 
 COPY docker-php-entrypoint-wrapper /usr/local/bin/
 
