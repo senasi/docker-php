@@ -15,7 +15,7 @@ set -e
 	echo '[php]'; \
 	echo "memory_limit = ${PHP_MEMORY_LIMIT:-512M}"; \
 	echo "post_max_size = ${PHP_POST_MAX_SIZE:-256M}"; \
-	echo "upload_max_size = ${PHP_UPLOAD_MAX_SIZE:-128M}"; \
+	echo "upload_max_filesize = ${PHP_UPLOAD_MAX_SIZE:-128M}"; \
 } | tee /usr/local/etc/php/php.ini
 
 # now run original entrypoint
