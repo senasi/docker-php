@@ -1,0 +1,25 @@
+FROM senasi/php:7.1
+
+RUN	apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
+	pecl install xdebug && \
+	docker-php-ext-enable xdebug && \
+	apk del .phpize-deps-configure && \
+	set -ex && \
+        cd /usr/local/etc && \
+        { \
+		echo '[Xdebug]'; \
+		echo 'xdebug.remote_connect_back = 1'; \
+		echo 'xdebug.remote_enable = 1'; \
+		echo 'xdebug.profiler_enable_trigger = 1'; \
+		echo 'xdebug.profiler_output_dir=/data/log'; \
+	} | tee php/conf.d/xdebug.ini
+
+RUN wget https://getcomposer.org/installer -O - -q | php -- --install-dir=/usr/bin --filename=composer && \
+	apk add --no-cache git openssh perl
+
+RUN apk add --no-cache nodejs && \
+	npm install npm@latest -g && \
+	npm install bower -g && \
+	echo '{ "allow_root": true }' > /root/.bowerrc
+
+WORKDIR /data
