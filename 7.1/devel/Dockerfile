@@ -14,8 +14,11 @@ RUN	apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 		echo 'xdebug.profiler_output_dir=/data/log'; \
 	} | tee php/conf.d/xdebug.ini
 
-RUN wget https://getcomposer.org/installer -O - -q | php -- --install-dir=/usr/bin --filename=composer && \
-	apk add --no-cache git openssh perl
+RUN wget https://getcomposer.org/installer -O - -q | php -- --install-dir=/usr/local/bin --filename=composer && \
+	apk add --no-cache git openssh perl && \
+	composer global install friendsofphp/php-cs-fixer
+
+ENV PATH="${PATH}:/root/.composer/vendor/bin":
 
 RUN apk add --no-cache nodejs npm && \
 	npm install npm@latest -g && \
