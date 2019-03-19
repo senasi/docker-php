@@ -2,7 +2,7 @@ FROM php:7.1.26-fpm-alpine
 
 # iconv problem
 # https://github.com/docker-library/php/issues/240
-RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing gnu-libiconv
+RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/community/testing gnu-libiconv
 
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
 
