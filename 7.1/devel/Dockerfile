@@ -18,7 +18,8 @@ RUN wget https://getcomposer.org/installer -O - -q | php -- --install-dir=/usr/l
 	apk add --no-cache git openssh perl && \
 	composer global require friendsofphp/php-cs-fixer
 
-ENV PATH="${PATH}:/root/.composer/vendor/bin":
+ENV PATH="${PATH}:/root/.composer/vendor/bin" \
+	COMPOSER_ALLOW_SUPERUSER=1
 
 RUN apk add --no-cache nodejs npm && \
 	npm install npm@latest -g && \
