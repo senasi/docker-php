@@ -1,7 +1,7 @@
 version: 2.1
 
 commands:
-  build_docker_image:
+  build_and_push_docker_image:
     parameters:
       tag:
         type: string
@@ -16,7 +16,7 @@ commands:
           command: docker push senasi/php::<< parameters.tag >>
 
 jobs:
-  build_base:
+  build:
     machine:
       docker_layer_caching: true
     steps:
@@ -24,19 +24,16 @@ jobs:
           name: Docker hub login
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-      - build_docker_image:
+      - build_and_push_docker_image:
           tag: ${CIRCLE_BRANCH}
           subdir: base
-      - build_docker_image:
+      - build_and_push_docker_image:
           tag: ${CIRCLE_BRANCH}-devel
           subdir: devel
-      - build_docker_image:
+      - build_and_push_docker_image:
           tag: ${CIRCLE_BRANCH}-nginx
           subdir: nginx
-
-
-      - run:
-          name: Build base image
-          command: |
-            git diff --name-only | grep -qE '/base/' || (echo "Base image not changed"  && exit 0)
-            docker build -t ${IMAGE_NAME}:${CIRCLE_BRANCH} base
+#      - run:
+#          name: Build base image
+#          command: |
+#            git diff --name-only | grep -qE '/base/' && .....
