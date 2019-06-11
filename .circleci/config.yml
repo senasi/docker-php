@@ -13,7 +13,7 @@ commands:
           command: docker build -t senasi/php:<< parameters.tag >> << parameters.subdir >>
       - run:
           name: Push image
-          command: docker push senasi/php::<< parameters.tag >>
+          command: docker push senasi/php:<< parameters.tag >>
 
 jobs:
   build:
