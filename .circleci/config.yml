@@ -16,7 +16,7 @@ commands:
           command: docker push senasi/php:<< parameters.tag >>
       - run:
           name: Push base image
-          command: docker push senasi/php:${MAJOR_TAG}
+          command: MAJOR_TAG=`echo "<< parameters.tag >>" | sed -nre 's/^[^0-9]*(([0-9]+\.)?[0-9]+).*/\1/p'` && docker push senasi/php:${MAJOR_TAG}
 
 jobs:
   build:
