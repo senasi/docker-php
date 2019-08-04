@@ -1,4 +1,4 @@
-FROM php:7.1.30-fpm-alpine
+FROM php:7.3.8-fpm-alpine3.10
 
 # iconv problem
 # https://github.com/docker-library/php/issues/240
@@ -13,8 +13,8 @@ RUN apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 		libsodium \
 		icu-libs \
 		openssl \
-		libmcrypt \
 		zlib \
+		libzip \
 		libxslt \
 		libxml2 \
 		freetype \
@@ -27,8 +27,8 @@ RUN apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 		libsodium-dev \
 		icu-dev \
 		openssl-dev \
-		libmcrypt-dev \
 		zlib-dev  \
+		libzip-dev  \
 		libxslt-dev \
 		libxml2-dev \
 		freetype-dev \
@@ -40,7 +40,7 @@ RUN apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 	docker-php-ext-configure imap --with-imap-ssl=/usr && \
 	pecl install mongodb mailparse && \
 	docker-php-ext-enable mongodb mailparse && \
-	docker-php-ext-install calendar gd pcntl pdo_mysql soap sockets xsl zip opcache mcrypt bcmath intl imap mysqli && \
+	docker-php-ext-install calendar gd pcntl pdo_mysql soap sockets xsl zip opcache bcmath intl imap mysqli && \
 	apk del .build-deps && \
 	rm -rf /tmp/* && \
 	chmod +x /usr/local/bin/docker-php-entrypoint-wrapper
