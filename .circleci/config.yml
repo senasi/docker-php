@@ -3,8 +3,6 @@ version: 2.1
 commands:
   build_and_push_docker_image:
     parameters:
-      basetag:
-        type: string
       tag:
         type: string
       subdir:
@@ -12,13 +10,13 @@ commands:
     steps:
       - run:
           name: Build image
-          command: docker build -t senasi/php:<< parameters.tag >> -t senasi/php:<< parameters.basetag >> << parameters.subdir >>
+          command: MAJOR_TAG=`echo "<< parameters.tag >>" | sed -nre 's/^[^0-9]*(([0-9]+\.)?[0-9]+).*/\1/p'` && docker build -t senasi/php:<< parameters.tag >> -t senasi/php:${MAJOR_TAG} << parameters.subdir >>
       - run:
           name: Push image
           command: docker push senasi/php:<< parameters.tag >>
       - run:
           name: Push base image
-          command: docker push senasi/php:<< parameters.basetag >>
+          command: docker push senasi/php:${MAJOR_TAG}
 
 jobs:
   build:
@@ -31,15 +29,12 @@ jobs:
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
       - build_and_push_docker_image:
-          basetag: ${CIRCLE_BRANCH}
           tag: ${CIRCLE_TAG}
           subdir: base
       - build_and_push_docker_image:
-          basetag: ${CIRCLE_BRANCH}-devel
           tag: ${CIRCLE_TAG}-devel
           subdir: devel
       - build_and_push_docker_image:
-          basetag: ${CIRCLE_BRANCH}-nginx
           tag: ${CIRCLE_TAG}-nginx
           subdir: nginx
 
