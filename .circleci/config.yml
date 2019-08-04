@@ -16,7 +16,7 @@ commands:
       - run:
           name: Push image
           command: docker push senasi/php:<< parameters.tag >>
-       - run:
+      - run:
           name: Push base image
           command: docker push senasi/php:<< parameters.basetag >>
 
