@@ -32,6 +32,7 @@ if [ "$current" = "$default" ]; then
 				echo "xdebug.remote_port = ${XDEBUG_REMOTE_PORT:-9000}"; \
 				echo "xdebug.profiler_enable_trigger = 1"; \
 				echo "xdebug.profiler_output_dir=/data/log"; \
+				echo "xdebug.idekey = \"${XDEBUG_IDE_KEY:-PHPSTORM}\""; \
 			} | tee /usr/local/etc/php/conf.d/xdebug.ini
 		else
 			{ \
@@ -41,6 +42,7 @@ if [ "$current" = "$default" ]; then
 				echo "xdebug.remote_port = ${XDEBUG_REMOTE_PORT:-9000}"; \
 				echo "xdebug.profiler_enable_trigger = 1"; \
 				echo "xdebug.profiler_output_dir=/data/log"; \
+				echo "xdebug.idekey = \"${XDEBUG_IDE_KEY:-PHPSTORM}\""; \
 			} | tee /usr/local/etc/php/conf.d/xdebug.ini
 		fi
 	fi
