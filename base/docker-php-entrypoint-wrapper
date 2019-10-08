@@ -17,7 +17,8 @@ if [ "$current" = "$default" ]; then
 	} | tee /usr/local/etc/php-fpm.d/zzz-docker.conf
 
 	{ \
-		echo '[php]'; \
+		echo "[php]"; \
+		echo "expose_php = off"; \
 		echo "memory_limit = ${PHP_MEMORY_LIMIT:-512M}"; \
 		echo "post_max_size = ${PHP_POST_MAX_SIZE:-256M}"; \
 		echo "upload_max_filesize = ${PHP_UPLOAD_MAX_SIZE:-128M}"; \
