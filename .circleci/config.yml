@@ -3,17 +3,20 @@ version: 2.1
 commands:
   build_and_push_docker_image:
     parameters:
-      tag:
+      sufix:
         type: string
       subdir:
         type: string
     steps:
       - run:
           name: Build image
-          command: docker build -t senasi/php:<< parameters.tag >> << parameters.subdir >>
+          command: MAJOR_TAG=`echo "${CIRCLE_TAG}" | sed -nre 's/^[^0-9]*(([0-9]+\.)?[0-9]+).*/\1/p'` && docker build -t senasi/php:${CIRCLE_TAG}<< parameters.sufix >> -t senasi/php:${MAJOR_TAG}<< parameters.sufix >> << parameters.subdir >>
       - run:
           name: Push image
-          command: docker push senasi/php:<< parameters.tag >>
+          command: docker push senasi/php:${CIRCLE_TAG}<< parameters.sufix >>
+      - run:
+          name: Push major tag image
+          command: MAJOR_TAG=`echo "${CIRCLE_TAG}" | sed -nre 's/^[^0-9]*(([0-9]+\.)?[0-9]+).*/\1/p'` && docker push senasi/php:${MAJOR_TAG}<< parameters.sufix >>
 
 jobs:
   build:
@@ -26,15 +29,22 @@ jobs:
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
       - build_and_push_docker_image:
-          tag: ${CIRCLE_BRANCH}
+          sufix: ""
           subdir: base
       - build_and_push_docker_image:
-          tag: ${CIRCLE_BRANCH}-devel
+          sufix: "-devel"
           subdir: devel
       - build_and_push_docker_image:
-          tag: ${CIRCLE_BRANCH}-nginx
+          sufix: "-nginx"
           subdir: nginx
-#      - run:
-#          name: Build base image
-#          command: |
-#            git diff --name-only | grep -qE '/base/' && .....
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
