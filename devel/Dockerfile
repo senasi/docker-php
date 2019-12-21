@@ -1,7 +1,7 @@
-FROM senasi/php:7.1
+FROM senasi/php:7.1.33
 
 RUN	apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
-	pecl install xdebug-2.6.0 && \
+	pecl install xdebug-2.9.0 && \
 	docker-php-ext-enable xdebug && \
 	apk del .phpize-deps-configure
 
