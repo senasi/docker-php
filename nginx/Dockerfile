@@ -2,7 +2,7 @@
 
 FROM senasi/php:7.4.7
 
-ENV NGINX_VERSION=1.19.0 \
+ENV NGINX_VERSION=1.19.1 \
 	PKG_RELEASE=1
 
 RUN set -x \
