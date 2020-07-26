@@ -48,8 +48,10 @@ RUN apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 # install only setuidgid file
 RUN apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing --virtual .setuidgid daemontools && \
 	cp /usr/bin/setuidgid /tmp/setuidgid && \
+	cp /usr/bin/envuidgid /tmp/envuidgid && \
 	apk del --no-cache .setuidgid && \
-	mv /tmp/setuidgid /usr/bin/setuidgid
+	mv /tmp/setuidgid /usr/bin/setuidgid && \
+	mv /tmp/envuidgid /usr/bin/envuidgid
 
 ENTRYPOINT ["docker-php-entrypoint-wrapper"]
 

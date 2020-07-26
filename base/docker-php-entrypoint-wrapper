@@ -21,7 +21,7 @@ if [ "$1" = "composer" -o "$1" = "bower" ]; then
 
   USER_NAME=`getent passwd $PWD_USER | cut -d: -f1`
 
-  exec setuidgid $USER_NAME "$@"
+  exec setuidgid $USER_NAME envuidgid $USER_NAME $@
 fi
 
 if [ "$1" = "php-fpm" ]; then
