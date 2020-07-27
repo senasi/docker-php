@@ -12,7 +12,7 @@ RUN wget https://getcomposer.org/installer -O - -q | php -- --install-dir=/usr/l
 ENV PATH="${PATH}:/root/.composer/vendor/bin" \
 	COMPOSER_ALLOW_SUPERUSER=1
 
-RUN apk add --no-cache nodejs npm && \
+RUN apk add --no-cache nodejs npm su-exec && \
 	npm install npm@latest -g && \
 	npm install bower -g && \
 	echo '{ "allow_root": true }' > /root/.bowerrc

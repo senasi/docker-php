@@ -1,31 +1,35 @@
 #!/bin/sh
 
-# running composer
-if [ "$1" = "composer" -o "$1" = "bower" ]; then
-  PWD_USER=`stat -c '%u' $PWD`
-  PWD_GROUP=`stat -c '%g' $PWD`
+# running composer or bower
+if [ "$1" = "composer" ] || [ "$1" = "bower" ]; then
+  CURRENT_UID=$(id -u)
+  PWD_USER=$(stat -c '%u' "$PWD")
 
-  GROUP_EXISTS=`getent group $PWD_GROUP || echo -1`
-  USER_EXISTS=`getent passwd $PWD_USER || echo -1`
+  if [ "$CURRENT_UID" = "0" ] && [ "$PWD_USER" != "0" ]; then
+    PWD_GROUP=$(stat -c '%g' "$PWD")
 
-  NAME=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1`
+    GROUP_EXISTS=$(getent group "$PWD_GROUP" || echo -1)
+    USER_EXISTS=$(getent passwd "$PWD_USER" || echo -1)
+
+    NAME=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
 
   if [ "$GROUP_EXISTS" = "-1" ]; then
-    addgroup -g $PWD_GROUP -S $NAME
+      addgroup -g "$PWD_GROUP" -S "$NAME"
   fi
 
   if [ "$USER_EXISTS" = "-1" ]; then
-    GROUP_NAME=`getent group $PWD_GROUP | cut -d: -f1`
-    adduser -S -D -H -u $PWD_USER -s /sbin/nologin -G $NAME -g $GROUP_NAME $NAME
+      GROUP_NAME=$(getent group "$PWD_GROUP" | cut -d: -f1)
+      adduser -S -D -u "$PWD_USER" -s /sbin/nologin -G "$NAME" -g "$GROUP_NAME" "$NAME"
   fi
 
-  USER_NAME=`getent passwd $PWD_USER | cut -d: -f1`
+    USER_NAME=$(getent passwd "$PWD_USER" | cut -d: -f1)
 
-  exec setuidgid $USER_NAME "$@"
+    exec su-exec "$USER_NAME" "$@"
+  fi
 fi
 
 # running php-fpm
-if [ "$1" = "php-fpm" -o "${1#-}" != "$1" ]; then
+if [ "$1" = "php-fpm" ] || [ "${1#-}" != "$1" ]; then
 	set -e
 
 	{ \
@@ -47,7 +51,7 @@ if [ "$1" = "php-fpm" -o "${1#-}" != "$1" ]; then
 	} | tee /usr/local/etc/php/php.ini
 
 	if [ -e /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ]; then
-		if [ -z ${XDEBUG_REMOTE_HOST} ]; then
+		if [ -z "${XDEBUG_REMOTE_HOST}" ]; then
 			{ \
 				echo "[Xdebug]"; \
 				echo "xdebug.remote_enable = 1"; \
