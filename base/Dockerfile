@@ -1,4 +1,4 @@
-FROM php:7.4.7-fpm-alpine3.12
+FROM php:7.4.13-fpm-alpine3.12
 
 # iconv problem
 # https://github.com/docker-library/php/issues/240
