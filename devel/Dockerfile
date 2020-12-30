@@ -6,7 +6,7 @@ RUN	apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 	apk del .phpize-deps-configure
 
 RUN wget https://getcomposer.org/installer -O - -q | php -- --install-dir=/usr/local/bin --filename=composer && \
-	apk add --no-cache git openssh perl && \
+	apk add --no-cache git openssh perl jq && \
 	composer global require squizlabs/php_codesniffer phpstan/phpstan vimeo/psalm
 
 ENV PATH="${PATH}:/root/.composer/vendor/bin" \
