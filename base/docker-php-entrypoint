@@ -1,0 +1,39 @@
+#!/bin/sh
+
+set -e
+
+# first arg is `-f` or `--some-option`
+if [ "${1#-}" != "$1" ]; then
+  set -- php-fpm "$@"
+fi
+
+# exec or source scripts in /docker-php-entrypoint.d/
+# script needs to have .sh extension
+# files with +x will be executed in new shell
+
+for file in /docker-php-entrypoint.d/*.sh; do
+  # POSIX friendly nullglob checking && directory checking
+  if [ ! -f "${file}" ]; then
+    continue
+  fi
+
+  if [ -x "${file}" ]; then
+    "${file}"
+  else
+    # shellcheck source=docker-php-entrypoint.d/
+    . "${file}"
+  fi
+done
+
+# run CMD as owner of current working directory (if not running php-fpm itself)
+if [ "$1" != "php-fpm" ]; then
+  current_uid=$(id -u)
+  pwd_uid=$(stat -c '%u' "$PWD")
+
+  if [ "${current_uid}" = "0" ] && [ "${pwd_uid}" != "0" ]; then
+    pwd_uid_gid=$(stat -c '%u:%g' "$PWD")
+    exec su-exec "${pwd_uid_gid}" "$@"
+  fi
+fi
+
+exec "$@"

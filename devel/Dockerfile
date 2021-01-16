@@ -7,7 +7,7 @@ RUN	apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
     # composer
     wget https://getcomposer.org/installer -O - -q | php -- --install-dir=/usr/local/bin --filename=composer && \
     # node + tools
-	apk add --no-cache git openssh perl nodejs npm su-exec && \
+	apk add --no-cache git openssh perl nodejs npm && \
 	# codesniffer
 	composer global require squizlabs/php_codesniffer phpstan/phpstan vimeo/psalm && \
     # update npm + install eslint

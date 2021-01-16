@@ -1,12 +1,14 @@
 FROM php:8.0.1-fpm-alpine3.13
 
+COPY docker-php-entrypoint /usr/local/bin/
+
+COPY docker-php-entrypoint.d/ /docker-php-entrypoint.d/
+
+RUN apk add --no-cache su-exec gnu-libiconv
+
 # iconv problem
 # https://github.com/docker-library/php/issues/240
-RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community gnu-libiconv
-
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
-
-COPY docker-php-entrypoint-wrapper /usr/local/bin/
 
 RUN apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 	apk add --no-cache --virtual .run-deps \
@@ -45,8 +47,4 @@ RUN apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 	docker-php-ext-install calendar gd pcntl pdo_mysql soap sockets xsl zip opcache bcmath intl imap mysqli && \
 	apk del .build-deps && \
 	rm -rf /tmp/* && \
-	chmod +x /usr/local/bin/docker-php-entrypoint-wrapper
-
-ENTRYPOINT ["docker-php-entrypoint-wrapper"]
-
-CMD ["php-fpm"]
+	chmod +x /usr/local/bin/docker-php-entrypoint
