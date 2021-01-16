@@ -7,7 +7,7 @@ if [ "$1" = "php-fpm" ]; then
 	if [ -e /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ]; then
     { \
       echo "[Xdebug]"; \
-      echo "xdebug.mode=develop,debug,profile,trace,gcstats"; \
+      echo "xdebug.mode=develop,debug,profile"; \
       echo "xdebug.start_with_request=trigger"; \
       if [ -z "${XDEBUG_CLIENT_HOST}" ]; then \
         echo "xdebug.discover_client_host=true"; \
