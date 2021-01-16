@@ -51,30 +51,21 @@ if [ "$1" = "php-fpm" ] || [ "${1#-}" != "$1" ]; then
 	} | tee /usr/local/etc/php/php.ini
 
 	if [ -e /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini ]; then
-		if [ -z "${XDEBUG_REMOTE_HOST}" ]; then
-			{ \
-				echo "[Xdebug]"; \
-				echo "xdebug.remote_enable = 1"; \
-				echo "xdebug.remote_connect_back = 1"; \
-				echo "xdebug.remote_port = ${XDEBUG_REMOTE_PORT:-9000}"; \
-				echo "xdebug.profiler_enable_trigger = 1"; \
-				echo "xdebug.profiler_output_dir=/data/log"; \
-				echo "xdebug.idekey = \"${XDEBUG_IDE_KEY:-PHPSTORM}\""; \
-			} | tee /usr/local/etc/php/conf.d/xdebug.ini
-		else
-			{ \
-				echo "[Xdebug]"; \
-				echo "xdebug.remote_enable = 1"; \
-				echo "xdebug.remote_host = ${XDEBUG_REMOTE_HOST}"; \
-				echo "xdebug.remote_port = ${XDEBUG_REMOTE_PORT:-9000}"; \
-				echo "xdebug.profiler_enable_trigger = 1"; \
-				echo "xdebug.profiler_output_dir=/data/log"; \
-				echo "xdebug.idekey = \"${XDEBUG_IDE_KEY:-PHPSTORM}\""; \
-			} | tee /usr/local/etc/php/conf.d/xdebug.ini
-		fi
+    { \
+      echo "[Xdebug]"; \
+      echo "xdebug.mode=develop,debug,profile,trace,gcstats"; \
+      echo "xdebug.start_with_request=trigger"; \
+      if [ -z "${XDEBUG_CLIENT_HOST}" ]; then \
+        echo "xdebug.discover_client_host=true"; \
+      else \
+        echo "xdebug.client_host=${XDEBUG_CLIENT_HOST}"; \
+      fi; \
+      echo "xdebug.client_port = ${XDEBUG_CLIENT_PORT:-9003}"; \
+      echo "xdebug.output_dir=/data/log"; \
+      echo "xdebug.idekey = \"${XDEBUG_IDE_KEY:-PHPSTORM}\""; \
+    } | tee /usr/local/etc/php/conf.d/xdebug.ini
 	fi
 fi
 
 # now run original entrypoint
-
 exec docker-php-entrypoint "$@"
