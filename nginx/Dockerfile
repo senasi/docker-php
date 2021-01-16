@@ -16,7 +16,9 @@ RUN set -x \
 	# add repo
 	&& printf "%s%s%s\n" \
         "http://nginx.org/packages/mainline/alpine/v" \
-		`egrep -o '^[0-9]+\.[0-9]+' /etc/alpine-release` \
+#		`egrep -o '^[0-9]+\.[0-9]+' /etc/alpine-release` \
+# nginx does not have alpine 3.13 packages yet
+        "3.12" \
 		"/main" \
 		| tee -a /etc/apk/repositories \
 	# add packages
