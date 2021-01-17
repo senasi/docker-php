@@ -4,14 +4,13 @@ COPY docker-php-entrypoint /usr/local/bin/
 
 COPY docker-php-entrypoint.d/ /docker-php-entrypoint.d/
 
-RUN apk add --no-cache su-exec gnu-libiconv
-
 # iconv problem
 # https://github.com/docker-library/php/issues/240
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
 
 RUN apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 	apk add --no-cache --virtual .run-deps \
+	    gnu-libiconv \
 		libsodium \
 		icu-libs \
 		openssl \

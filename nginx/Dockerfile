@@ -17,7 +17,7 @@ RUN set -x \
 	&& printf "%s%s%s\n" \
         "http://nginx.org/packages/mainline/alpine/v" \
 #		`egrep -o '^[0-9]+\.[0-9]+' /etc/alpine-release` \
-# nginx does not have alpine 3.13 packages yet
+# nginx does not have alpine v3.13 packages yet
         "3.12" \
 		"/main" \
 		| tee -a /etc/apk/repositories \

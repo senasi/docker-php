@@ -25,15 +25,4 @@ for file in /docker-php-entrypoint.d/*.sh; do
   fi
 done
 
-# run CMD as owner of current working directory (if not running php-fpm itself)
-if [ "$1" != "php-fpm" ]; then
-  current_uid=$(id -u)
-  pwd_uid=$(stat -c '%u' "$PWD")
-
-  if [ "${current_uid}" = "0" ] && [ "${pwd_uid}" != "0" ]; then
-    pwd_uid_gid=$(stat -c '%u:%g' "$PWD")
-    exec su-exec "${pwd_uid_gid}" "$@"
-  fi
-fi
-
 exec "$@"
