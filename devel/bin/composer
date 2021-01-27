@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# wrapper for composer to run it as owner of current working directory
+
+new_id=$(run-as-owner id -u)
+
+if [ new_id != "0" ]; then
+  export COMPOSER_HOME="/tmp/.composer-${new_id}"
+fi
+
+run-as-owner /usr/local/bin/composer-real "$@"

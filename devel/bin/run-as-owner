@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# run given command as owner of the working directory (if script is run as root)
+
+if [ -z "$1" ]; then
+  echo "execute command as owner of the working directory (if run as root)" &> 2
+  echo "usage: $0 command-to-run" &> 2
+  exit 1
+fi
+
+current_uid=$(id -u)
+pwd_uid=$(stat -c '%u' "$PWD")
+
+if [ "${current_uid}" = "0" ] && [ "${pwd_uid}" != "0" ]; then
+  pwd_uid_gid=$(stat -c '%u:%g' "$PWD")
+  set -- su-exec "${pwd_uid_gid}" "${@}"
+fi
+
+exec "$@"

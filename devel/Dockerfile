@@ -1,6 +1,6 @@
 FROM senasi/php:8.0.1
 
-COPY composer /usr/local/bin/
+COPY bin/ /usr/local/bin/
 
 COPY docker-php-entrypoint.d/ /docker-php-entrypoint.d/
 
@@ -10,7 +10,7 @@ RUN	apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 	apk del .phpize-deps-configure && \
     # composer
     wget https://getcomposer.org/installer -O - -q | php -- --install-dir=/usr/local/bin --filename=composer-real && \
-    chmod +x /usr/local/bin/composer && \
+    chmod +x /usr/local/bin/composer /usr/local/bin/run-as-owner && \
     # node + tools
 	apk add --no-cache git openssh perl nodejs npm su-exec && \
 	# codesniffer
