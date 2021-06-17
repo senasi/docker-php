@@ -1,4 +1,4 @@
-FROM senasi/php:8.0.1
+FROM senasi/php:8.0.7
 
 COPY bin/ /usr/local/bin/
 
@@ -13,6 +13,8 @@ RUN	apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
     chmod +x /usr/local/bin/composer /usr/local/bin/run-as-owner && \
     # node + tools
 	apk add --no-cache git openssh perl nodejs npm su-exec && \
+	# self-update npm
+	npm install -g npm && \
 	# codesniffer
 	composer-real global require squizlabs/php_codesniffer phpstan/phpstan vimeo/psalm && \
     # update npm + install eslint
