@@ -12,7 +12,7 @@ RUN	apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
     wget https://getcomposer.org/installer -O - -q | php -- --install-dir=/usr/local/bin --filename=composer-real && \
     chmod +x /usr/local/bin/composer /usr/local/bin/run-as-owner && \
     # node + tools
-	apk add --no-cache git openssh perl nodejs npm su-exec && \
+	apk add --no-cache git openssh perl nodejs npm su-exec python3 && \
 	# self-update npm
 	npm install -g npm && \
 	# codesniffer
