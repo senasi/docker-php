@@ -1,4 +1,4 @@
-FROM php:8.0.9-fpm-alpine3.14
+FROM php:8.0.15-fpm-alpine3.15
 
 COPY docker-php-entrypoint /usr/local/bin/
 
@@ -45,7 +45,9 @@ RUN apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 	# install apcu with enter on prompt about debugging
 	printf "\n" | pecl install apcu && \
 	docker-php-ext-enable apcu mongodb mailparse && \
-	docker-php-ext-install calendar gd pcntl pdo_mysql soap sockets xsl zip opcache bcmath intl imap mysqli && \
+	docker-php-ext-install calendar gd pcntl pdo_mysql soap xsl zip opcache bcmath intl imap mysqli && \
+    # workaround for sockets ext: https://github.com/docker-library/php/issues/1245
+    CFLAGS="$CFLAGS -D_GNU_SOURCE" docker-php-ext-install sockets && \
 	apk del .build-deps && \
 	rm -rf /tmp/* && \
 	chmod +x /usr/local/bin/docker-php-entrypoint
