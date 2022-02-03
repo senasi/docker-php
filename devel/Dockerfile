@@ -20,7 +20,7 @@ RUN	apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 	# codesniffer
 	composer-real global require squizlabs/php_codesniffer phpstan/phpstan vimeo/psalm && \
     # update npm + install eslint
-	npm install npm@latest eslint -g && \
+	npm install npm@latest eslint -g
 
 ENV PATH="${PATH}:/root/.composer/vendor/bin" \
 	COMPOSER_ALLOW_SUPERUSER=1
