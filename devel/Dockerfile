@@ -1,4 +1,4 @@
-FROM senasi/php:7.1.33-3
+FROM senasi/php:7.1.33-4
 
 RUN	apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 	pecl install xdebug-2.9.0 && \
@@ -13,7 +13,8 @@ ENV PATH="${PATH}:/root/.composer/vendor/bin" \
 	COMPOSER_ALLOW_SUPERUSER=1
 
 RUN apk add --no-cache nodejs npm su-exec && \
-	npm install npm@latest -g && \
+    # disable updating npm, because latest version does not support nodejs10
+    #	npm install npm@latest -g && \
 	npm install bower -g && \
 	echo '{ "allow_root": true }' > /root/.bowerrc
 
