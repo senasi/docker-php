@@ -39,7 +39,7 @@ RUN apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 		imap-dev && \
 	docker-php-ext-configure gd  --with-jpeg-dir=/usr/include/ --with-freetype-dir=/usr/include/ --with-webp-dir=/usr/include/ && \
 	docker-php-ext-configure imap --with-imap-ssl=/usr && \
-	pecl install mongodb mailparse && \
+	pecl install mongodb-1.11.1 mailparse && \
 	docker-php-ext-enable mongodb mailparse && \
 	docker-php-ext-install calendar gd pcntl pdo_mysql soap sockets xsl zip opcache mcrypt bcmath intl imap mysqli && \
 	apk del .build-deps && \
