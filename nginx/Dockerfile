@@ -2,7 +2,7 @@
 
 FROM senasi/php:8.1.2
 
-ENV NGINX_VERSION=1.21.6 \
+ENV NGINX_VERSION=1.23.1 \
 	PKG_RELEASE=1
 
 RUN set -x \
@@ -13,22 +13,35 @@ RUN set -x \
 	" \
 	# add certificate
 	&& curl -o /etc/apk/keys/nginx_signing.rsa.pub https://nginx.org/keys/nginx_signing.rsa.pub \
-	# add repo
-	&& printf "%s%s%s\n" \
-        "http://nginx.org/packages/mainline/alpine/v" \
-		`egrep -o '^[0-9]+\.[0-9]+' /etc/alpine-release` \
-		"/main" \
-		| tee -a /etc/apk/repositories \
-	# add packages
-	&& apk add --no-cache $nginxPackages \
-	# remove the last line with the packages repos in the repositories file
-	&& sed -i '$ d' /etc/apk/repositories \
+    # install from repo
+    && apk add -X "https://nginx.org/packages/mainline/alpine/v$(egrep -o '^[0-9]+\.[0-9]+' /etc/alpine-release)/main" --no-cache $nginxPackages \
+    # remove certificate
 	&& rm -rf /etc/apk/keys/nginx_signing.rsa.pub \
+    # Bring in gettext so we can get `envsubst`, then throw the rest away. To do this, we need to install `gettext`
+    # then move `envsubst` out of the way so `gettext` can be deleted completely, then move `envsubst` back.
+    && apk add --no-cache --virtual .gettext gettext \
+    && mv /usr/bin/envsubst /tmp/ \
+    && runDeps="$( \
+        scanelf --needed --nobanner /tmp/envsubst \
+            | awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
+            | sort -u \
+            | xargs -r apk info --installed \
+            | sort -u \
+    )" \
+    && apk add --no-cache $runDeps \
+    && apk del .gettext \
+    && mv /tmp/envsubst /usr/local/bin/ \
 	# Bring in tzdata so users could set the timezones through the environment
 	# variables
 	&& apk add --no-cache tzdata \
+    # Bring in curl and ca-certificates to make registering on DNS SD easier
+    && apk add --no-cache curl ca-certificates \
 	# forward request and error logs to docker log collector
 	&& ln -sf /dev/stdout /var/log/nginx/access.log \
-	&& ln -sf /dev/stderr /var/log/nginx/error.log
+	&& ln -sf /dev/stderr /var/log/nginx/error.log \
+    # remove default config
+    && rm -rf /etc/nginx/conf.d/*
 
+COPY docker-nginx-entrypoint.d /
 COPY nginx.conf /etc/nginx/
+
