@@ -42,6 +42,6 @@ RUN set -x \
     # remove default config
     && rm -rf /etc/nginx/conf.d/*
 
+COPY docker-nginx-entrypoint /
 COPY docker-nginx-entrypoint.d /
 COPY nginx.conf /etc/nginx/
-
