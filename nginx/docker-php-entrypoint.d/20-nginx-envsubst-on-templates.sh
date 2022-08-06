@@ -5,8 +5,6 @@
 
 set -e
 
-ME=$(basename $0)
-
 auto_envsubst() {
   local template_dir="${NGINX_ENVSUBST_TEMPLATE_DIR:-/etc/nginx/templates}"
   local suffix="${NGINX_ENVSUBST_TEMPLATE_SUFFIX:-.template}"
@@ -30,6 +28,6 @@ auto_envsubst() {
   done
 }
 
-auto_envsubst
-
-exit 0
+if [ "$1" = "nginx" ] || [ "$1" = "docker-nginx" ]; then
+  auto_envsubst
+fi

@@ -18,8 +18,10 @@ for file in /docker-php-entrypoint.d/*.sh; do
   fi
 
   if [ -x "${file}" ]; then
+    echo "Executing ${file}"
     "${file}"
   else
+    echo "Sourcing ${file}"
     # shellcheck source=docker-php-entrypoint.d/
     . "${file}"
   fi

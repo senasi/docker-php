@@ -5,6 +5,10 @@ FROM senasi/php:8.1.9
 ENV NGINX_VERSION=1.23.1 \
 	PKG_RELEASE=1
 
+COPY bin/ /usr/local/bin/
+
+COPY docker-php-entrypoint.d/ /docker-php-entrypoint.d/
+
 RUN set -x \
 	&& addgroup -g 101 -S nginx \
 	&& adduser -S -D -H -u 101 -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx \
@@ -34,14 +38,11 @@ RUN set -x \
 	# Bring in tzdata so users could set the timezones through the environment
 	# variables
 	&& apk add --no-cache tzdata \
-    # Bring in curl and ca-certificates to make registering on DNS SD easier
-    && apk add --no-cache curl ca-certificates \
 	# forward request and error logs to docker log collector
 	&& ln -sf /dev/stdout /var/log/nginx/access.log \
 	&& ln -sf /dev/stderr /var/log/nginx/error.log \
     # remove default config
-    && rm -rf /etc/nginx/conf.d/*
+    && rm -rf /etc/nginx/conf.d/* \
+    && chmod +x /usr/local/bin/docker-nginx
 
-COPY docker-nginx-entrypoint /
-COPY docker-nginx-entrypoint.d /
 COPY nginx.conf /etc/nginx/
