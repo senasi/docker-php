@@ -41,7 +41,7 @@ RUN apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 		libgcrypt-dev && \
 	docker-php-ext-configure gd  --with-jpeg --with-freetype --with-webp && \
 	PHP_OPENSSL=yes docker-php-ext-configure imap --with-imap-ssl && \
-	pecl install mongodb mailparse && \
+	pecl install mongodb-1.12.1 mailparse && \
 	# install apcu with enter on prompt about debugging
 	printf "\n" | pecl install apcu && \
 	docker-php-ext-enable apcu mongodb mailparse && \
