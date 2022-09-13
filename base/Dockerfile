@@ -13,6 +13,8 @@ RUN apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 	    gnu-libiconv \
 		libsodium \
 		icu-libs \
+    	# https://github.com/dotnet/dotnet-docker/issues/3844
+    	icu-data-full \
 		openssl \
 		zlib \
 		libzip \
