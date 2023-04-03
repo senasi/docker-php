@@ -4,7 +4,7 @@ COPY bin/ /usr/local/bin/
 
 COPY docker-php-entrypoint.d/ /docker-php-entrypoint.d/
 
-RUN	apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
+RUN	apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS linux-headers && \
 	pecl install xdebug && \
 	docker-php-ext-enable xdebug && \
 	apk del .phpize-deps-configure && \
