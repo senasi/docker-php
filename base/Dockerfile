@@ -1,16 +1,11 @@
-FROM php:8.1.10-fpm-alpine3.16
+FROM php:8.2.4-fpm-alpine3.16
 
 COPY docker-php-entrypoint /usr/local/bin/
 
 COPY docker-php-entrypoint.d/ /docker-php-entrypoint.d/
 
-# iconv problem
-# https://github.com/docker-library/php/issues/240
-ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
-
 RUN apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 	apk add --no-cache --virtual .run-deps \
-	    gnu-libiconv \
 		libsodium \
 		icu-libs \
     	# https://github.com/dotnet/dotnet-docker/issues/3844
@@ -40,16 +35,16 @@ RUN apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 		libjpeg-turbo-dev \
 		libpng-dev \
 		imap-dev \
-		libgcrypt-dev && \
+		libgcrypt-dev \
+    	linux-headers && \
 	docker-php-ext-configure gd  --with-jpeg --with-freetype --with-webp && \
 	PHP_OPENSSL=yes docker-php-ext-configure imap --with-imap-ssl && \
+    # latest version of mongodb ext to support mongo 3.2
 	pecl install mongodb-1.12.1 mailparse && \
 	# install apcu with enter on prompt about debugging
 	printf "\n" | pecl install apcu && \
-	docker-php-ext-enable apcu mongodb mailparse && \
-	docker-php-ext-install calendar gd pcntl pdo_mysql soap xsl zip opcache bcmath intl imap mysqli && \
-    # workaround for sockets ext: https://github.com/docker-library/php/issues/1245
-    CFLAGS="$CFLAGS -D_GNU_SOURCE" docker-php-ext-install sockets && \
+	docker-php-ext-enable apcu mongodb mailparse opcache && \
+	docker-php-ext-install calendar gd pcntl pdo_mysql soap xsl zip bcmath intl imap mysqli sockets && \
 	apk del .build-deps && \
 	rm -rf /tmp/* && \
 	chmod +x /usr/local/bin/docker-php-entrypoint
