@@ -1,4 +1,6 @@
-FROM senasi/php:8.1.10
+FROM senasi/php:8.1.23
+
+COPY --from=trajano/alpine-libfaketime  /faketime.so /lib/faketime.so
 
 COPY bin/ /usr/local/bin/
 
