@@ -1,4 +1,4 @@
-FROM senasi/php:8.2.4
+FROM senasi/php:8.2.11
 
 COPY bin/ /usr/local/bin/
 
@@ -13,7 +13,7 @@ RUN	apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS linux-heade
     chmod +x /usr/local/bin/composer /usr/local/bin/run-as-owner && \
     # node + tools
 	apk add --no-cache git openssh perl nodejs npm su-exec python3 && \
-	# pyhton symlink
+	# python symlink
 	ln -sf python3 /usr/bin/python && \
 	# self-update npm
 	npm install -g npm && \
