@@ -1,4 +1,4 @@
-FROM php:8.2.11-fpm-alpine3.18
+FROM php:8.2.15-fpm-alpine3.18
 
 COPY docker-php-entrypoint /usr/local/bin/
 
