@@ -17,11 +17,11 @@ jobs:
     secrets: inherit
     with:
       folder: 'devel'
-      suffix: 'devel'
+      suffix: '-devel'
   build_nginx:
     needs: build_base
     uses: ./.github/workflows/build-one.yml
     secrets: inherit
     with:
       folder: 'nginx'
-      suffix: 'nginx'
+      suffix: '-nginx'
