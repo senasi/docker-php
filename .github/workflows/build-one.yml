@@ -28,6 +28,6 @@ jobs:
         id: build_push
         uses: docker/build-push-action@v5
         with:
-          context: ${{ inputs.context }}
+          context: {{ defaultContext }}/${{ inputs.context }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
