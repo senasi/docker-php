@@ -10,18 +10,18 @@ jobs:
     uses: ./.github/workflows/build-one.yml
     secrets: inherit
     with:
-      context: 'base'
+      folder: 'base'
   build_devel:
     needs: build_base
     uses: ./.github/workflows/build-one.yml
     secrets: inherit
     with:
-      context: 'devel'
-      suffix: '-devel'
+      folder: 'devel'
+      suffix: 'devel'
   build_nginx:
     needs: build_base
     uses: ./.github/workflows/build-one.yml
     secrets: inherit
     with:
-      context: 'nginx'
-      suffix: '-nginx'
+      folder: 'nginx'
+      suffix: 'nginx'

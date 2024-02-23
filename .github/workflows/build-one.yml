@@ -1,7 +1,7 @@
 on:
   workflow_call:
     inputs:
-      context:
+      folder:
         required: true
         type: string
       suffix:
@@ -31,14 +31,16 @@ jobs:
         with:
           images: |
             senasi/php
+          flavor: |
+            latest=false
+            suffix=${{ inputs.suffix }}
           tags: |
-            type=semver,pattern={{version}}${{ inputs.suffix }}
-            type=semver,pattern={{major}}.{{minor}}${{ inputs.suffix }}
-            type=semver,pattern={{major}}${{ inputs.suffix }}
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
       - name: Build and push
         id: build_push
         uses: docker/build-push-action@v5
         with:
-          context: ${{ inputs.context }}
+          context: {{defaultContext}}:${{ inputs.folder }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
