@@ -1,0 +1,33 @@
+on:
+  workflow_call:
+    inputs:
+      context:
+        required: false
+        type: string
+        default: '.'
+      suffix:
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            senasi/php
+          tags: |
+            type=semver,pattern={{version}}${{ inputs.suffix }}
+            type=semver,pattern={{major}}.{{minor}}${{ inputs.suffix }}
+            type=semver,pattern={{major}}${{ inputs.suffix }}
+      - name: Build and push
+        id: build_push
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ inputs.context }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
