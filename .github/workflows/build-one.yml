@@ -41,6 +41,6 @@ jobs:
         id: build_push
         uses: docker/build-push-action@v5
         with:
-          context: {{defaultContext}}:${{ inputs.folder }}
+          context: "{{defaultContext}}:${{ inputs.folder }}"
           push: true
           tags: ${{ steps.meta.outputs.tags }}
