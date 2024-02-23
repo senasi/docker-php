@@ -21,14 +21,14 @@ jobs:
       - name: Build base image
         uses: ./.github/workflows/build-one.yml
         with:
-          context: 'base'
+          context: './base'
       - name: Build devel image
         uses: ./.github/workflows/build-one.yml
         with:
-          context: 'devel'
+          context: './devel'
           suffix: '-devel'
       - name: Build nginx image
         uses: ./.github/workflows/build-one.yml
         with:
-          context: 'nginx'
+          context: './nginx'
           suffix: '-nginx'

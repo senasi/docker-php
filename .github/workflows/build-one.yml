@@ -2,9 +2,8 @@ on:
   workflow_call:
     inputs:
       context:
-        required: false
+        required: true
         type: string
-        default: '.'
       suffix:
         required: false
         type: string
@@ -28,6 +27,6 @@ jobs:
         id: build_push
         uses: docker/build-push-action@v5
         with:
-          context: {{ defaultContext }}/${{ inputs.context }}
+          context: ${{ inputs.context }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
