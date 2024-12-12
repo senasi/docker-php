@@ -1,4 +1,4 @@
-FROM php:8.3.3-fpm-alpine3.18
+FROM php:8.4.1-fpm-alpine3.20
 
 COPY docker-php-entrypoint /usr/local/bin/
 
@@ -38,13 +38,11 @@ RUN apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 		libgcrypt-dev \
     	linux-headers && \
 	docker-php-ext-configure gd  --with-jpeg --with-freetype --with-webp && \
-	PHP_OPENSSL=yes docker-php-ext-configure imap --with-imap-ssl && \
-    # latest version of mongodb ext to support mongo 3.2
-	pecl install mongodb-1.12.1 mailparse && \
+	pecl install mailparse && \
 	# install apcu with enter on prompt about debugging
 	printf "\n" | pecl install apcu && \
-	docker-php-ext-enable apcu mongodb mailparse opcache && \
-	docker-php-ext-install calendar gd pcntl pdo_mysql soap xsl zip bcmath intl imap mysqli sockets && \
+	docker-php-ext-enable apcu mailparse opcache && \
+	docker-php-ext-install calendar gd pcntl pdo_mysql soap xsl zip bcmath intl mysqli sockets && \
 	apk del .build-deps && \
 	rm -rf /tmp/* && \
 	chmod +x /usr/local/bin/docker-php-entrypoint
