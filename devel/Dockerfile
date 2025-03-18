@@ -1,4 +1,4 @@
-FROM senasi/php:8.2.26
+FROM senasi/php:8.2.28
 
 COPY bin/ /usr/local/bin/
 
