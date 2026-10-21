@@ -1,0 +1,27 @@
+name: Build and push docker images
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build_base:
+    uses: ./.github/workflows/build-one.yml
+    secrets: inherit
+    with:
+      folder: 'base'
+  build_devel:
+    needs: build_base
+    uses: ./.github/workflows/build-one.yml
+    secrets: inherit
+    with:
+      folder: 'devel'
+      suffix: '-devel'
+  build_nginx:
+    needs: build_base
+    uses: ./.github/workflows/build-one.yml
+    secrets: inherit
+    with:
+      folder: 'nginx'
+      suffix: '-nginx'
