@@ -1,10 +1,10 @@
-FROM php:7.4.13-fpm-alpine3.12
+FROM php:7.4.33-fpm-alpine3.16
 
 # iconv problem
 # https://github.com/docker-library/php/issues/240
 RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community gnu-libiconv
 
-ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
+ENV LD_PRELOAD=/usr/lib/preloadable_libiconv.so
 
 COPY docker-php-entrypoint-wrapper /usr/local/bin/
 
@@ -40,8 +40,8 @@ RUN apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
 		libgcrypt-dev && \
 	docker-php-ext-configure gd  --with-jpeg --with-freetype --with-webp && \
 	PHP_OPENSSL=yes docker-php-ext-configure imap --with-imap-ssl && \
-	pecl install mongodb mailparse && \
-	docker-php-ext-enable mongodb mailparse && \
+	pecl install mailparse && \
+	docker-php-ext-enable mailparse && \
 	docker-php-ext-install calendar gd pcntl pdo_mysql soap sockets xsl zip opcache bcmath intl imap mysqli && \
 	apk del .build-deps && \
 	rm -rf /tmp/* && \
