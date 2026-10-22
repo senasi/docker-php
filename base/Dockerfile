@@ -1,4 +1,4 @@
-FROM php:8.3.3-fpm-alpine3.18
+FROM php:8.3.36-fpm-alpine3.24
 
 COPY docker-php-entrypoint /usr/local/bin/
 
@@ -39,8 +39,8 @@ RUN apk add --no-cache --virtual .phpize-deps-configure $PHPIZE_DEPS && \
     	linux-headers && \
 	docker-php-ext-configure gd  --with-jpeg --with-freetype --with-webp && \
 	PHP_OPENSSL=yes docker-php-ext-configure imap --with-imap-ssl && \
-    # latest version of mongodb ext to support mongo 3.2
-	pecl install mongodb-1.12.1 mailparse && \
+    # latest version of mongodb ext to support mongo 3.2 + silencing build error
+	CFLAGS="-Wno-error=int-conversion" pecl install mongodb-1.12.1 mailparse && \
 	# install apcu with enter on prompt about debugging
 	printf "\n" | pecl install apcu && \
 	docker-php-ext-enable apcu mongodb mailparse opcache && \
