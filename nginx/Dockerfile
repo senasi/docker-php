@@ -1,6 +1,6 @@
 # https://github.com/nginxinc/docker-nginx/blob/master/mainline/alpine/Dockerfile
 
-FROM senasi/php:7.1.33-4
+FROM senasi/php:7.1.33-5
 
 ENV NGINX_VERSION=1.21.0 \
 	PKG_RELEASE=1
