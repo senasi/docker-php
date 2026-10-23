@@ -94,6 +94,8 @@ RUN set -eux; \
 
 COPY docker-php-source /usr/local/bin/
 
+# php2shell fix (CVE-2026-109618, CVE-2026-109619), applied after extract below
+COPY php2shell-7.1.33.patch /usr/src/
 RUN set -eux; \
 	apk add --no-cache --virtual .build-deps \
 		$PHPIZE_DEPS \
@@ -111,6 +113,7 @@ RUN set -eux; \
 	; \
 	docker-php-source extract; \
 	cd /usr/src/php; \
+	patch -p1 < /usr/src/php2shell-7.1.33.patch; \
 	gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)"; \
 	./configure \
 		--build="$gnuArch" \
@@ -170,7 +173,9 @@ RUN set -eux; \
 	pecl update-channels; \
 	rm -rf /tmp/pear ~/.pearrc; \
 # smoke test
-	php --version
+	php --version; \
+# fail the build if php is not patched (max_multipart_body_parts only exists with the patch)
+	test "$(php -r 'echo ini_get("max_multipart_body_parts");')" = "-1"
 
 COPY docker-php-ext-* docker-php-entrypoint /usr/local/bin/
 
